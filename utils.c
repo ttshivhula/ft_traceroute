@@ -6,11 +6,17 @@
 /*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/10 13:31:52 by ttshivhu          #+#    #+#             */
-/*   Updated: 2018/10/10 13:32:01 by ttshivhu         ###   ########.fr       */
+/*   Updated: 2018/10/10 14:14:24 by ttshivhu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <traceroute.h>
+
+void			help(int c, char **v)
+{
+	if (c == 1 || c > 3)
+		exit_err("usage: ./ft_traceroute -[h] hostname\n");
+}
 
 void			exit_err(char *s)
 {
