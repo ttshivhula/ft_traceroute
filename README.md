@@ -10,7 +10,6 @@ ft_traceroute is my own implementation of traceroute
 ## Compiling
 
 ```python
-import foobar
 
 make # compiles ft_traceroute
 make clean # removes all object files
