@@ -14,8 +14,10 @@
 
 void			help(int c, char **v)
 {
-	if (c == 1 || c > 3)
-		exit_err("usage: ./ft_traceroute -[h] hostname\n");
+	if (c == 1 || c >= 3)
+		exit_err("usage: ./ft_traceroute [-h] hostname\n");
+	if (v[1][0] == '-' && v[1][2] == '\0')
+		exit_err("usage: ./ft_traceroute [-h] hostname\n");
 }
 
 void			exit_err(char *s)

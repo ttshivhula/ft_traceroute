@@ -106,7 +106,7 @@ int		main(int c, char **v)
 	trace.ip = dns_lookup(v[1], &trace.addr);
 	if (trace.ip)
 	{
-		printf("traceroute to %s (%s)\n", (c == 2) ? v[1] : v[2], trace.ip);
+		printf("traceroute to %s (%s)\n", v[1], trace.ip);
 		ft_traceroute(&trace);
 		free(trace.buffer);
 	}
