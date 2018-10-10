@@ -6,7 +6,7 @@
 /*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/10 13:32:14 by ttshivhu          #+#    #+#             */
-/*   Updated: 2018/10/10 14:14:25 by ttshivhu         ###   ########.fr       */
+/*   Updated: 2018/10/10 14:34:29 by ttshivhu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	print_results(int type, t_traceroute *p)
 
 void	ft_traceroute(t_traceroute *p)
 {
-	while (42)
+	while (42 && (!(p->hop == 30)))
 	{
 		p->sbuff = create_msg(p->hop, p->ip, p->buffer);
 		gettimeofday(&p->start, NULL);
@@ -92,8 +92,6 @@ void	ft_traceroute(t_traceroute *p)
 		}
 		else
 			print_results(2, p);
-		if (p->hop == 30)
-			break ;
 		p->hop++;
 	}
 }
