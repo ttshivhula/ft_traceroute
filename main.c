@@ -92,6 +92,8 @@ void	ft_traceroute(t_traceroute *p)
 		}
 		else
 			print_results(2, p);
+		if (p->hop == 30)
+			break ;
 		p->hop++;
 	}
 }
@@ -106,7 +108,7 @@ int		main(int c, char **v)
 	trace.ip = dns_lookup(v[1], &trace.addr);
 	if (trace.ip)
 	{
-		printf("traceroute to %s (%s)\n", v[1], trace.ip);
+		printf("traceroute to %s (%s), 30 hops max\n", v[1], trace.ip);
 		ft_traceroute(&trace);
 		free(trace.buffer);
 	}
