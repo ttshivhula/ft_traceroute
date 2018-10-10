@@ -6,7 +6,7 @@
 /*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/10 13:32:14 by ttshivhu          #+#    #+#             */
-/*   Updated: 2018/10/10 13:40:00 by ttshivhu         ###   ########.fr       */
+/*   Updated: 2018/10/10 13:42:56 by ttshivhu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ int		main(int c, char **v)
 	(void)c;
 	init_trace(&trace);
 	trace.ip = dns_lookup(v[1], &trace.addr);
+	printf("traceroute to %s (%s).\n", v[1], trace.ip);
 	ft_traceroute(&trace);
 	free(trace.buffer);
 	return (0);
