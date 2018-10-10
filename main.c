@@ -57,20 +57,35 @@ void	init_trace(t_traceroute *trace)
 			(const char *)&trace->tv_out, sizeof(trace->tv_out));
 }
 
-void	print_results(int type, t_traceroute *p)
+void	print_results(int type, t_traceroute *p, int n)
 {
 	if (type == 1)
 	{
-		printf("%2d. %-17s %.3f ms\n", p->hop,
+		if (n == 0)
+		{
+			printf("%2d. %-17s %.3f ms ", p->hop,
 				inet_ntoa(p->addr2.sin_addr), p->total);
+		}
+		else
+			printf("%.3f ms%c", p->total, (n == 2) ? '\n' : ' ');
 	}
 	else
-		printf("%2d. *\n", p->hop);
+	{
+		if (n == 0)
+			printf("%2d. * ", p->hop);
+		else
+			printf("*%c", (n == 2) ? '\n' : ' ');
+	}
 }
 
-void	ft_traceroute(t_traceroute *p)
+int		per_hop(t_traceroute *p)
 {
-	while (42 && (!(p->hop == 30)))
+	int	i;
+	int	kill;
+
+	i = -1;
+	kill = 0;
+	while (++i < 3)
 	{
 		p->sbuff = create_msg(p->hop, p->ip, p->buffer);
 		gettimeofday(&p->start, NULL);
@@ -83,15 +98,25 @@ void	ft_traceroute(t_traceroute *p)
 			p->total = (double)((p->end.tv_usec - p->start.tv_usec) / 1000.0);
 			p->icmphd2 = (struct icmphdr *)(p->buff + sizeof(struct ip));
 			if (p->icmphd2->type != 0)
-				print_results(1, p);
+				print_results(1, p, i);
 			else
 			{
-				print_results(1, p);
-				break ;
+				print_results(1, p, i);
+				kill = 1;
 			}
 		}
 		else
-			print_results(2, p);
+			print_results(2, p, i);
+	}
+	return (kill);
+}
+
+void	ft_traceroute(t_traceroute *p)
+{
+	while (42 && (!(p->hop == 30)))
+	{
+		if (per_hop(p))
+			break ;
 		p->hop++;
 	}
 }
