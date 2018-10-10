@@ -59,12 +59,19 @@ void	init_trace(t_traceroute *trace)
 
 void	print_results(int type, t_traceroute *p, int n)
 {
+	struct	ip *ip;
+	struct hostent *c;
+	char		*ipa;
+
+	ipa = inet_ntoa(p->addr2.sin_addr);
+	ip = (struct ip *)p->buff;
+	c = gethostbyaddr((void*)&(ip->ip_src.s_addr), sizeof(ip->ip_src.s_addr), AF_INET);
 	if (type == 1)
 	{
 		if (n == 0)
 		{
-			printf("%2d. %-17s %.3f ms ", p->hop,
-				inet_ntoa(p->addr2.sin_addr), p->total);
+			printf("%2d  %s (%s) %.3f ms ", p->hop, c ? c->h_name : ipa,
+				ipa, p->total);
 		}
 		else
 			printf("%.3f ms%c", p->total, (n == 2) ? '\n' : ' ');
@@ -72,7 +79,7 @@ void	print_results(int type, t_traceroute *p, int n)
 	else
 	{
 		if (n == 0)
-			printf("%2d. * ", p->hop);
+			printf("%2d  * ", p->hop);
 		else
 			printf("*%c", (n == 2) ? '\n' : ' ');
 	}
@@ -80,7 +87,7 @@ void	print_results(int type, t_traceroute *p, int n)
 
 void	ft_traceroute(t_traceroute *p)
 {
-	while (42 && (!(p->hop == 30)))
+	while (42 && (!(p->hop == 31)))
 	{
 		p->i = -1;
 		if (per_hop(p))
@@ -100,7 +107,7 @@ int		main(int c, char **v)
 	if (trace.ip)
 	{
 		printf("traceroute to %s (%s), 30 hops max,", v[1], trace.ip);
-		printf(" %d byte packets\n", sizeof(struct ip) + sizeof(struct icmphdr));
+		printf(" %ld byte packets\n", sizeof(struct ip) + sizeof(struct icmphdr));
 		ft_traceroute(&trace);
 		free(trace.buffer);
 	}

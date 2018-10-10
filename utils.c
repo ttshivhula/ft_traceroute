@@ -76,7 +76,7 @@ int				per_hop(t_traceroute *p)
 			gettimeofday(&p->end, NULL);
 			p->total = (double)((p->end.tv_usec - p->start.tv_usec) / 1000.0);
 			p->icmphd2 = (struct icmphdr *)(p->buff + sizeof(struct ip));
-			if (p->icmphd2->type != 0)
+			if ((p->icmphd2->type != 0))
 				print_results(1, p, p->i);
 			else
 			{
