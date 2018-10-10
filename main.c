@@ -28,45 +28,35 @@ void	*create_msg(int hop, char *ip, char *buff)
 
 int	main(int c, char **v)
 {
-	char	*buffer;
-	struct sockaddr_in addr;
-	char	*sbuff;
-	char	*ip;
-
-	if (c != 2)
-	{
-      		printf("need destination for tracert\n");
-		exit(0);
-	}
-	buffer = malloc(sizeof(struct ip) + sizeof(struct icmphdr) + 20);
-	int sfd = socket (AF_INET, SOCK_RAW, IPPROTO_ICMP);
-	int hop = 1;
-
-	int one = 1;
-	const int *val = &one;
-	if (setsockopt (sfd, IPPROTO_IP, IP_HDRINCL, val, sizeof (one)) < 0)
+	t_traceroute trace;
+	int		one;
+	int	*val;
+	
+	one = 1;
+	val = &one;
+	trace.hop = 1;
+	trace.buffer = malloc(4096);
+	trace.sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
+	if (setsockopt (trace.sockfd, IPPROTO_IP, IP_HDRINCL, val, sizeof (one)) < 0)
 		printf ("Cannot set HDRINCL!\n");
-
-	ip = dns_lookup(v[1], &addr);
-	printf("ip addr: %s\n", ip);
+	trace.ip = dns_lookup(v[1], &trace.addr);
 	while (1)
 	{
-		sbuff = create_msg(hop, ip, buffer);
-		sendto(sfd, sbuff, sizeof(struct ip) + sizeof(struct icmphdr),
-			0, SA & addr, sizeof addr);
-		char buff[4096] = { 0 };
+		trace.sbuff = create_msg(trace.hop, trace.ip, trace.buffer);
+		sendto(trace.sockfd, trace.sbuff, sizeof(struct ip) + sizeof(struct icmphdr),
+			0, SA & trace.addr, sizeof trace.addr);
 		struct sockaddr_in addr2;
 		socklen_t len = sizeof (struct sockaddr_in);
-		recvfrom(sfd, buff, sizeof(buff), 0, SA & addr2, &len);
-		struct icmphdr *icmphd2 = (struct icmphdr *) (buff + 20);
+		recvfrom(trace.sockfd, trace.buff, sizeof(trace.buff), 0, SA & addr2, &len);
+		struct icmphdr *icmphd2 = (struct icmphdr *) (trace.buff + sizeof(struct ip));
 		if (icmphd2->type != 0)
-			printf("%d: %s\n", hop, inet_ntoa (addr2.sin_addr));
+			printf("%d: %s\n", trace.hop, inet_ntoa (addr2.sin_addr));
 		else
 		{
-			printf("%d: %s\n", hop, inet_ntoa (addr2.sin_addr));
+			printf("%d: %s\n", trace.hop, inet_ntoa (addr2.sin_addr));
 			exit (0);
 		}
-		hop++;
+		trace.hop++;
 	}
 	return 0;
 }

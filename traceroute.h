@@ -33,6 +33,15 @@
 char		*dns_lookup(char *addr_host, struct sockaddr_in	*addr_con);
 unsigned short checksum(char *buffer, int nwords);
 
-
+typedef struct	s_traceroute
+{
+	char	*buffer;
+	char 	buff[4096];
+	struct sockaddr_in addr;
+	char	*sbuff;
+	char	*ip;
+	int	hop;
+	int	sockfd;
+}		t_traceroute;
 
 #endif
