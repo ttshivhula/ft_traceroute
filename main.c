@@ -6,7 +6,7 @@
 /*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/10 13:32:14 by ttshivhu          #+#    #+#             */
-/*   Updated: 2018/10/10 13:42:56 by ttshivhu         ###   ########.fr       */
+/*   Updated: 2018/10/10 14:04:14 by ttshivhu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	init_trace(t_traceroute *trace)
 			(const char *)&trace->tv_out, sizeof(trace->tv_out));
 }
 
-void	print_results(int type, t_traceroute *p, double total)
+void	print_results(int type, t_traceroute *p)
 {
 	if (type == 1)
 	{
@@ -70,32 +70,28 @@ void	print_results(int type, t_traceroute *p, double total)
 
 void	ft_traceroute(t_traceroute *p)
 {
-	struct timeval	start;
-	struct timeval	end;
-	double			total;
-
 	while (42)
 	{
 		p->sbuff = create_msg(p->hop, p->ip, p->buffer);
-		gettimeofday(&start, NULL);
+		gettimeofday(&p->start, NULL);
 		sendto(p->sockfd, p->sbuff, sizeof(struct ip) + sizeof(struct icmphdr),
 				0, SA & p->addr, sizeof(p->addr));
 		if (!(recvfrom(p->sockfd, p->buff, sizeof(p->buff), 0,
-				SA & p->addr2, &p->len) <= 0))
+						SA & p->addr2, &p->len) <= 0))
 		{
-		gettimeofday(&end, NULL);
-		total = (double)((end.tv_usec - start.tv_usec) / 1000.0);
-		p->icmphd2 = (struct icmphdr *)(p->buff + sizeof(struct ip));
-		if (p->icmphd2->type != 0)
-			print_results(1, p, total);
-		else
-		{
-			print_results(1, p, total);
-			break ;
+			gettimeofday(&p->end, NULL);
+			p->total = (double)((p->end.tv_usec - p->start.tv_usec) / 1000.0);
+			p->icmphd2 = (struct icmphdr *)(p->buff + sizeof(struct ip));
+			if (p->icmphd2->type != 0)
+				print_results(1, p);
+			else
+			{
+				print_results(1, p);
+				break ;
+			}
 		}
-		}
 		else
-			print_results(2, p, total);
+			print_results(2, p);
 		p->hop++;
 	}
 }
