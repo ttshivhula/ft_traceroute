@@ -6,7 +6,7 @@
 /*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/10 13:28:53 by ttshivhu          #+#    #+#             */
-/*   Updated: 2018/10/10 14:14:24 by ttshivhu         ###   ########.fr       */
+/*   Updated: 2018/10/10 17:08:07 by ttshivhu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,5 +67,8 @@ char					*dns_lookup(char *addr_host,
 unsigned short			checksum(char *buffer, int nwords);
 void					exit_err(char *s);
 void					help(int c, char **v);
+int						per_hop(t_traceroute *p);
+void					print_results(int type,
+		t_traceroute *p, int n);
 
 #endif

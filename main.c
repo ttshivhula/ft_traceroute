@@ -6,7 +6,7 @@
 /*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/10 13:32:14 by ttshivhu          #+#    #+#             */
-/*   Updated: 2018/10/10 14:34:29 by ttshivhu         ###   ########.fr       */
+/*   Updated: 2018/10/10 17:08:07 by ttshivhu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,39 +76,6 @@ void	print_results(int type, t_traceroute *p, int n)
 		else
 			printf("*%c", (n == 2) ? '\n' : ' ');
 	}
-}
-
-int		per_hop(t_traceroute *p)
-{
-	int	i;
-	int	kill;
-
-	i = -1;
-	kill = 0;
-	while (++i < 3)
-	{
-		p->sbuff = create_msg(p->hop, p->ip, p->buffer);
-		gettimeofday(&p->start, NULL);
-		sendto(p->sockfd, p->sbuff, sizeof(struct ip) + sizeof(struct icmphdr),
-				0, SA & p->addr, sizeof(p->addr));
-		if (!(recvfrom(p->sockfd, p->buff, sizeof(p->buff), 0,
-						SA & p->addr2, &p->len) <= 0))
-		{
-			gettimeofday(&p->end, NULL);
-			p->total = (double)((p->end.tv_usec - p->start.tv_usec) / 1000.0);
-			p->icmphd2 = (struct icmphdr *)(p->buff + sizeof(struct ip));
-			if (p->icmphd2->type != 0)
-				print_results(1, p, i);
-			else
-			{
-				print_results(1, p, i);
-				kill = 1;
-			}
-		}
-		else
-			print_results(2, p, i);
-	}
-	return (kill);
 }
 
 void	ft_traceroute(t_traceroute *p)

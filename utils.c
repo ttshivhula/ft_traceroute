@@ -6,7 +6,7 @@
 /*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/10 13:31:52 by ttshivhu          #+#    #+#             */
-/*   Updated: 2018/10/10 14:14:24 by ttshivhu         ###   ########.fr       */
+/*   Updated: 2018/10/10 17:07:08 by ttshivhu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,36 @@ unsigned short	checksum(char *buffer, int nwords)
 	sum = (sum >> 16) + (sum & 0xffff);
 	sum += (sum >> 16);
 	return (~sum);
+}
+
+int				per_hop(t_traceroute *p)
+{
+	int	i;
+
+	i = -1;
+	while (++i < 3)
+	{
+		p->sbuff = create_msg(p->hop, p->ip, p->buffer);
+		gettimeofday(&p->start, NULL);
+		sendto(p->sockfd, p->sbuff, sizeof(struct ip) + sizeof(struct icmphdr),
+				0, SA & p->addr, sizeof(p->addr));
+		if (!(recvfrom(p->sockfd, p->buff, sizeof(p->buff), 0,
+						SA & p->addr2, &p->len) <= 0))
+		{
+			gettimeofday(&p->end, NULL);
+			p->total = (double)((p->end.tv_usec - p->start.tv_usec) / 1000.0);
+			p->icmphd2 = (struct icmphdr *)(p->buff + sizeof(struct ip));
+			if (p->icmphd2->type != 0)
+				print_results(1, p, i);
+			else
+			{
+				print_results(1, p, i);
+				if (i == 2)
+					return (1);
+			}
+		}
+		else
+			print_results(2, p, i);
+	}
+	return (0);
 }
