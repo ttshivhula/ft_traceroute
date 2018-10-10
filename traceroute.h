@@ -70,5 +70,6 @@ void					help(int c, char **v);
 int						per_hop(t_traceroute *p);
 void					print_results(int type,
 		t_traceroute *p, int n);
+void	*create_msg(int hop, char *ip, char *buff);
 
 #endif
