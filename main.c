@@ -6,7 +6,7 @@
 /*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/10 13:32:14 by ttshivhu          #+#    #+#             */
-/*   Updated: 2018/10/10 14:04:14 by ttshivhu         ###   ########.fr       */
+/*   Updated: 2018/10/10 14:07:55 by ttshivhu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	print_results(int type, t_traceroute *p)
 {
 	if (type == 1)
 	{
-		printf("%2d. %-17s %.3f\n", p->hop,
+		printf("%2d. %-17s %.3f ms\n", p->hop,
 				inet_ntoa(p->addr2.sin_addr), p->total);
 	}
 	else
