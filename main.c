@@ -46,11 +46,15 @@ void	init_trace(t_traceroute *trace)
 	one = 1;
 	val = &one;
 	trace->hop = 1;
+	trace->tv_out.tv_sec = RECV_TIMEOUT;
+	trace->tv_out.tv_usec = 0;
 	trace->len = sizeof(struct sockaddr_in);
 	trace->buffer = malloc(4096);
 	trace->sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
 	if (setsockopt(trace->sockfd, IPPROTO_IP, IP_HDRINCL, val, sizeof(one)) < 0)
 		exit_err("error setsockopt\n");
+	setsockopt(trace->sockfd, SOL_SOCKET, SO_RCVTIMEO,
+			(const char *)&trace->tv_out, sizeof(trace->tv_out));
 }
 
 void	print_results(int type, t_traceroute *p, double total)
@@ -60,6 +64,8 @@ void	print_results(int type, t_traceroute *p, double total)
 		printf("%2d. %-17s %.3f\n", p->hop,
 				inet_ntoa(p->addr2.sin_addr), total);
 	}
+	else
+		printf("%2d. *\n", p->hop);
 }
 
 void	ft_traceroute(t_traceroute *p)
@@ -74,8 +80,9 @@ void	ft_traceroute(t_traceroute *p)
 		gettimeofday(&start, NULL);
 		sendto(p->sockfd, p->sbuff, sizeof(struct ip) + sizeof(struct icmphdr),
 				0, SA & p->addr, sizeof(p->addr));
-		recvfrom(p->sockfd, p->buff, sizeof(p->buff), 0,
-				SA & p->addr2, &p->len);
+		if (!(recvfrom(p->sockfd, p->buff, sizeof(p->buff), 0,
+				SA & p->addr2, &p->len) <= 0))
+		{
 		gettimeofday(&end, NULL);
 		total = (double)((end.tv_usec - start.tv_usec) / 1000.0);
 		p->icmphd2 = (struct icmphdr *)(p->buff + sizeof(struct ip));
@@ -86,6 +93,9 @@ void	ft_traceroute(t_traceroute *p)
 			print_results(1, p, total);
 			break ;
 		}
+		}
+		else
+			print_results(2, p, total);
 		p->hop++;
 	}
 }
@@ -97,7 +107,7 @@ int		main(int c, char **v)
 	(void)c;
 	init_trace(&trace);
 	trace.ip = dns_lookup(v[1], &trace.addr);
-	printf("traceroute to %s (%s).\n", v[1], trace.ip);
+	printf("traceroute to %s (%s)\n", v[1], trace.ip);
 	ft_traceroute(&trace);
 	free(trace.buffer);
 	return (0);

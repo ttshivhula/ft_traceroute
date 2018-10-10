@@ -42,6 +42,7 @@
 # include <sys/time.h>
 
 # define SA (struct sockaddr*)
+# define RECV_TIMEOUT 1
 
 typedef struct			s_traceroute
 {
@@ -55,6 +56,7 @@ typedef struct			s_traceroute
 	char				*ip;
 	int					hop;
 	int					sockfd;
+	struct timeval		tv_out;
 }						t_traceroute;
 
 char					*dns_lookup(char *addr_host,
