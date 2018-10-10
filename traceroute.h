@@ -6,7 +6,7 @@
 /*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/10 13:28:53 by ttshivhu          #+#    #+#             */
-/*   Updated: 2018/10/10 17:08:07 by ttshivhu         ###   ########.fr       */
+/*   Updated: 2018/10/10 17:13:01 by ttshivhu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ typedef struct			s_traceroute
 	struct timeval		start;
 	struct timeval		end;
 	double				total;
+	int					i;
 }						t_traceroute;
 
 char					*dns_lookup(char *addr_host,
@@ -70,6 +71,6 @@ void					help(int c, char **v);
 int						per_hop(t_traceroute *p);
 void					print_results(int type,
 		t_traceroute *p, int n);
-void	*create_msg(int hop, char *ip, char *buff);
+void					*create_msg(int hop, char *ip, char *buff);
 
 #endif

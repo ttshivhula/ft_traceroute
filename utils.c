@@ -6,7 +6,7 @@
 /*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/10 13:31:52 by ttshivhu          #+#    #+#             */
-/*   Updated: 2018/10/10 17:07:08 by ttshivhu         ###   ########.fr       */
+/*   Updated: 2018/10/10 17:12:58 by ttshivhu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,7 @@ unsigned short	checksum(char *buffer, int nwords)
 
 int				per_hop(t_traceroute *p)
 {
-	int	i;
-
-	i = -1;
-	while (++i < 3)
+	while (++(p->i) < 3)
 	{
 		p->sbuff = create_msg(p->hop, p->ip, p->buffer);
 		gettimeofday(&p->start, NULL);
@@ -80,16 +77,16 @@ int				per_hop(t_traceroute *p)
 			p->total = (double)((p->end.tv_usec - p->start.tv_usec) / 1000.0);
 			p->icmphd2 = (struct icmphdr *)(p->buff + sizeof(struct ip));
 			if (p->icmphd2->type != 0)
-				print_results(1, p, i);
+				print_results(1, p, p->i);
 			else
 			{
-				print_results(1, p, i);
-				if (i == 2)
+				print_results(1, p, p->i);
+				if (p->i == 2)
 					return (1);
 			}
 		}
 		else
-			print_results(2, p, i);
+			print_results(2, p, p->i);
 	}
 	return (0);
 }

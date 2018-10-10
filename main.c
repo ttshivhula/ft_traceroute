@@ -6,7 +6,7 @@
 /*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/10 13:32:14 by ttshivhu          #+#    #+#             */
-/*   Updated: 2018/10/10 17:08:07 by ttshivhu         ###   ########.fr       */
+/*   Updated: 2018/10/10 17:13:28 by ttshivhu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ void	ft_traceroute(t_traceroute *p)
 {
 	while (42 && (!(p->hop == 30)))
 	{
+		p->i = -1;
 		if (per_hop(p))
 			break ;
 		p->hop++;
