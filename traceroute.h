@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   traceroute.h                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/10/10 13:28:53 by ttshivhu          #+#    #+#             */
+/*   Updated: 2018/10/10 13:30:56 by ttshivhu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef TRACEROUTE_H
 # define TRACEROUTE_H
 
@@ -31,22 +43,23 @@
 
 # define SA (struct sockaddr*)
 
-char		*dns_lookup(char *addr_host, struct sockaddr_in	*addr_con);
-unsigned short checksum(char *buffer, int nwords);
-void	exit_err(char *s);
-
-typedef struct	s_traceroute
+typedef struct			s_traceroute
 {
-	char	*buffer;
-	char 	buff[4096];
-	socklen_t len;
-	struct sockaddr_in addr;
-	struct sockaddr_in addr2;
-	struct icmphdr *icmphd2;
-	char	*sbuff;
-	char	*ip;
-	int	hop;
-	int	sockfd;
-}		t_traceroute;
+	char				*buffer;
+	char				buff[4096];
+	socklen_t			len;
+	struct sockaddr_in	addr;
+	struct sockaddr_in	addr2;
+	struct icmphdr		*icmphd2;
+	char				*sbuff;
+	char				*ip;
+	int					hop;
+	int					sockfd;
+}						t_traceroute;
+
+char					*dns_lookup(char *addr_host,
+		struct sockaddr_in	*addr_con);
+unsigned short			checksum(char *buffer, int nwords);
+void					exit_err(char *s);
 
 #endif

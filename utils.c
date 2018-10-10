@@ -1,12 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/10/10 13:31:52 by ttshivhu          #+#    #+#             */
+/*   Updated: 2018/10/10 13:32:01 by ttshivhu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <traceroute.h>
 
-void	exit_err(char *s)
+void			exit_err(char *s)
 {
 	printf("%s", s);
 	exit(1);
 }
 
-char		*dns_lookup(char *addr_host, struct sockaddr_in	*addr_con)
+char			*dns_lookup(char *addr_host, struct sockaddr_in	*addr_con)
 {
 	struct addrinfo		hints;
 	struct addrinfo		*res;
@@ -25,10 +37,10 @@ char		*dns_lookup(char *addr_host, struct sockaddr_in	*addr_con)
 	return (ip);
 }
 
-unsigned short checksum(char *buffer, int nwords)
+unsigned short	checksum(char *buffer, int nwords)
 {
-	unsigned short *buf;
-	unsigned long sum;
+	unsigned short	*buf;
+	unsigned long	sum;
 
 	buf = (unsigned short *)buffer;
 	sum = 0;
@@ -39,5 +51,5 @@ unsigned short checksum(char *buffer, int nwords)
 	}
 	sum = (sum >> 16) + (sum & 0xffff);
 	sum += (sum >> 16);
-	return ~sum;
+	return (~sum);
 }

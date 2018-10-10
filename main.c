@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/10/10 13:32:14 by ttshivhu          #+#    #+#             */
+/*   Updated: 2018/10/10 13:40:00 by ttshivhu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <traceroute.h>
 
 void	*create_msg(int hop, char *ip, char *buff)
 {
-	struct ip	*ip_hdr;
+	struct ip		*ip_hdr;
 	struct icmphdr	*icmphd;
 
 	ip_hdr = (struct ip *)buff;
@@ -14,7 +26,7 @@ void	*create_msg(int hop, char *ip, char *buff)
 	ip_hdr->ip_off = 0;
 	ip_hdr->ip_ttl = hop;
 	ip_hdr->ip_p = IPPROTO_ICMP;
-	inet_pton (AF_INET, ip, &(ip_hdr->ip_dst));
+	inet_pton(AF_INET, ip, &(ip_hdr->ip_dst));
 	ip_hdr->ip_sum = checksum(buff, 9);
 	icmphd = (struct icmphdr *)(buff + sizeof(struct ip));
 	icmphd->type = ICMP_ECHO;
@@ -28,9 +40,9 @@ void	*create_msg(int hop, char *ip, char *buff)
 
 void	init_trace(t_traceroute *trace)
 {
-	int		one;
+	int	one;
 	int	*val;
-	
+
 	one = 1;
 	val = &one;
 	trace->hop = 1;
@@ -41,40 +53,51 @@ void	init_trace(t_traceroute *trace)
 		exit_err("error setsockopt\n");
 }
 
+void	print_results(int type, t_traceroute *p, double total)
+{
+	if (type == 1)
+	{
+		printf("%2d. %-17s %.3f\n", p->hop,
+				inet_ntoa(p->addr2.sin_addr), total);
+	}
+}
+
 void	ft_traceroute(t_traceroute *p)
 {
-	struct timeval start;
-	struct timeval end;
-	double total;
+	struct timeval	start;
+	struct timeval	end;
+	double			total;
 
 	while (42)
 	{
 		p->sbuff = create_msg(p->hop, p->ip, p->buffer);
 		gettimeofday(&start, NULL);
 		sendto(p->sockfd, p->sbuff, sizeof(struct ip) + sizeof(struct icmphdr),
-			0, SA & p->addr, sizeof(p->addr));
-		recvfrom(p->sockfd, p->buff, sizeof(p->buff), 0, SA & p->addr2, &p->len);
+				0, SA & p->addr, sizeof(p->addr));
+		recvfrom(p->sockfd, p->buff, sizeof(p->buff), 0,
+				SA & p->addr2, &p->len);
 		gettimeofday(&end, NULL);
 		total = (double)((end.tv_usec - start.tv_usec) / 1000.0);
 		p->icmphd2 = (struct icmphdr *)(p->buff + sizeof(struct ip));
 		if (p->icmphd2->type != 0)
-			printf("%2d. %-17s %.3f\n", p->hop, inet_ntoa(p->addr2.sin_addr), total);
+			print_results(1, p, total);
 		else
 		{
-			printf("%2d. %-17s %.3f\n", p->hop, inet_ntoa(p->addr2.sin_addr), total);
+			print_results(1, p, total);
 			break ;
 		}
 		p->hop++;
 	}
 }
 
-int	main(int c, char **v)
+int		main(int c, char **v)
 {
-	(void)c;
 	t_traceroute trace;
+
+	(void)c;
 	init_trace(&trace);
 	trace.ip = dns_lookup(v[1], &trace.addr);
 	ft_traceroute(&trace);
 	free(trace.buffer);
-	return 0;
+	return (0);
 }
