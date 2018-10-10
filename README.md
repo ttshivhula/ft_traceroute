@@ -7,21 +7,20 @@ ft_traceroute is my own implementation of traceroute
 ### Requirements
 * Linux
 
-## Usage
+## Compiling
 
 ```python
 import foobar
 
-foobar.pluralize('word') # returns 'words'
-foobar.pluralize('goose') # returns 'geese'
-foobar.singularize('phenomena') # returns 'phenomenon'
+make # compiles ft_traceroute
+make clean # removes all object files
+make fclean # removes all compiled files
+make re # recompiles ft_traceroute
 ```
 
-## Development
+## Running
 ```
-$ virtualenv foobar
-$ . foobar/bin/activate
-$ pip install -e .
+$ sudo ./ft_traceroute google.com
 ```
 
 ## Contributing
@@ -30,4 +29,4 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 Please make sure to update tests as appropriate.
 
 ## License
-[GPLv2](https://choosealicense.com/licenses/mit/)
+[GPLv2](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
