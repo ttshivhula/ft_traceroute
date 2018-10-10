@@ -27,6 +27,7 @@
 # include <sys/types.h>
 # include <sys/socket.h>
 # include <netdb.h>
+# include <sys/time.h>
 
 # define SA (struct sockaddr*)
 

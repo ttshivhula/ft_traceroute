@@ -43,18 +43,25 @@ void	init_trace(t_traceroute *trace)
 
 void	ft_traceroute(t_traceroute *p)
 {
+	struct timeval start;
+	struct timeval end;
+	double total;
+
 	while (42)
 	{
 		p->sbuff = create_msg(p->hop, p->ip, p->buffer);
+		gettimeofday(&start, NULL);
 		sendto(p->sockfd, p->sbuff, sizeof(struct ip) + sizeof(struct icmphdr),
 			0, SA & p->addr, sizeof(p->addr));
 		recvfrom(p->sockfd, p->buff, sizeof(p->buff), 0, SA & p->addr2, &p->len);
+		gettimeofday(&end, NULL);
+		total = (double)((end.tv_usec - start.tv_usec) / 1000.0);
 		p->icmphd2 = (struct icmphdr *)(p->buff + sizeof(struct ip));
 		if (p->icmphd2->type != 0)
-			printf("%d: %s\n", p->hop, inet_ntoa(p->addr2.sin_addr));
+			printf("%2d. %-17s %.3f\n", p->hop, inet_ntoa(p->addr2.sin_addr), total);
 		else
 		{
-			printf("%d: %s\n", p->hop, inet_ntoa(p->addr2.sin_addr));
+			printf("%2d. %-17s %.3f\n", p->hop, inet_ntoa(p->addr2.sin_addr), total);
 			break ;
 		}
 		p->hop++;
@@ -63,6 +70,7 @@ void	ft_traceroute(t_traceroute *p)
 
 int	main(int c, char **v)
 {
+	(void)c;
 	t_traceroute trace;
 	init_trace(&trace);
 	trace.ip = dns_lookup(v[1], &trace.addr);

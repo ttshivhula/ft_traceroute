@@ -17,7 +17,7 @@ char		*dns_lookup(char *addr_host, struct sockaddr_in	*addr_con)
 	hints.ai_family = AF_INET;
 	ip = malloc(INET_ADDRSTRLEN);
 	if (getaddrinfo(addr_host, NULL, &hints, &(res)) < 0)
-		exit_err("ping: unknown host\n");
+		exit_err("ft_traceroute: unknown host\n");
 	sa_in = (struct sockaddr_in *)res->ai_addr;
 	inet_ntop(res->ai_family, &(sa_in->sin_addr), ip, INET_ADDRSTRLEN);
 	(*addr_con) = *sa_in;
