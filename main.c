@@ -26,37 +26,47 @@ void	*create_msg(int hop, char *ip, char *buff)
 	return (buff);
 }
 
-int	main(int c, char **v)
+void	init_trace(t_traceroute *trace)
 {
-	t_traceroute trace;
 	int		one;
 	int	*val;
 	
 	one = 1;
 	val = &one;
-	trace.hop = 1;
-	trace.buffer = malloc(4096);
-	trace.sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
-	if (setsockopt (trace.sockfd, IPPROTO_IP, IP_HDRINCL, val, sizeof (one)) < 0)
-		printf ("Cannot set HDRINCL!\n");
-	trace.ip = dns_lookup(v[1], &trace.addr);
-	while (1)
+	trace->hop = 1;
+	trace->len = sizeof(struct sockaddr_in);
+	trace->buffer = malloc(4096);
+	trace->sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
+	if (setsockopt(trace->sockfd, IPPROTO_IP, IP_HDRINCL, val, sizeof(one)) < 0)
+		exit_err("error setsockopt\n");
+}
+
+void	ft_traceroute(t_traceroute *p)
+{
+	while (42)
 	{
-		trace.sbuff = create_msg(trace.hop, trace.ip, trace.buffer);
-		sendto(trace.sockfd, trace.sbuff, sizeof(struct ip) + sizeof(struct icmphdr),
-			0, SA & trace.addr, sizeof trace.addr);
-		struct sockaddr_in addr2;
-		socklen_t len = sizeof (struct sockaddr_in);
-		recvfrom(trace.sockfd, trace.buff, sizeof(trace.buff), 0, SA & addr2, &len);
-		struct icmphdr *icmphd2 = (struct icmphdr *) (trace.buff + sizeof(struct ip));
-		if (icmphd2->type != 0)
-			printf("%d: %s\n", trace.hop, inet_ntoa (addr2.sin_addr));
+		p->sbuff = create_msg(p->hop, p->ip, p->buffer);
+		sendto(p->sockfd, p->sbuff, sizeof(struct ip) + sizeof(struct icmphdr),
+			0, SA & p->addr, sizeof(p->addr));
+		recvfrom(p->sockfd, p->buff, sizeof(p->buff), 0, SA & p->addr2, &p->len);
+		p->icmphd2 = (struct icmphdr *)(p->buff + sizeof(struct ip));
+		if (p->icmphd2->type != 0)
+			printf("%d: %s\n", p->hop, inet_ntoa(p->addr2.sin_addr));
 		else
 		{
-			printf("%d: %s\n", trace.hop, inet_ntoa (addr2.sin_addr));
-			exit (0);
+			printf("%d: %s\n", p->hop, inet_ntoa(p->addr2.sin_addr));
+			break ;
 		}
-		trace.hop++;
+		p->hop++;
 	}
+}
+
+int	main(int c, char **v)
+{
+	t_traceroute trace;
+	init_trace(&trace);
+	trace.ip = dns_lookup(v[1], &trace.addr);
+	ft_traceroute(&trace);
+	free(trace.buffer);
 	return 0;
 }
