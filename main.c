@@ -6,7 +6,7 @@
 /*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/10 13:32:14 by ttshivhu          #+#    #+#             */
-/*   Updated: 2018/10/10 17:13:28 by ttshivhu         ###   ########.fr       */
+/*   Updated: 2018/10/10 17:16:17 by ttshivhu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,8 @@ int		main(int c, char **v)
 	trace.ip = dns_lookup(v[1], &trace.addr);
 	if (trace.ip)
 	{
-		printf("traceroute to %s (%s), 30 hops max\n", v[1], trace.ip);
+		printf("traceroute to %s (%s), 30 hops max,", v[1], trace.ip);
+		printf(" %d byte packets\n", sizeof(struct ip) + sizeof(struct icmphdr));
 		ft_traceroute(&trace);
 		free(trace.buffer);
 	}
