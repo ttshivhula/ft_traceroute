@@ -62,7 +62,7 @@ void	print_results(int type, t_traceroute *p)
 	if (type == 1)
 	{
 		printf("%2d. %-17s %.3f\n", p->hop,
-				inet_ntoa(p->addr2.sin_addr), total);
+				inet_ntoa(p->addr2.sin_addr), p->total);
 	}
 	else
 		printf("%2d. *\n", p->hop);
