@@ -108,8 +108,8 @@ int		main(int c, char **v)
 	if (trace.ip)
 	{
 		printf("traceroute to %s (%s), 30 hops max,", v[1], trace.ip);
-		printf(" %ld byte packets\n", sizeof(struct ip) +
-				sizeof(struct icmphdr));
+		printf(" %d byte packets\n", (int)(sizeof(struct ip) +
+				sizeof(struct icmphdr)));
 		ft_traceroute(&trace);
 		free(trace.buffer);
 	}
