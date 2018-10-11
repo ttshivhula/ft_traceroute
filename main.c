@@ -6,7 +6,7 @@
 /*   By: ttshivhu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/10 13:32:14 by ttshivhu          #+#    #+#             */
-/*   Updated: 2018/10/10 17:16:17 by ttshivhu         ###   ########.fr       */
+/*   Updated: 2018/10/11 08:38:55 by ttshivhu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,14 @@ void	init_trace(t_traceroute *trace)
 
 void	print_results(int type, t_traceroute *p, int n)
 {
-	struct	ip *ip;
-	struct hostent *c;
-	char		*ipa;
+	struct ip		*ip;
+	struct hostent	*c;
+	char			*ipa;
 
 	ipa = inet_ntoa(p->addr2.sin_addr);
 	ip = (struct ip *)p->buff;
-	c = gethostbyaddr((void*)&(ip->ip_src.s_addr), sizeof(ip->ip_src.s_addr), AF_INET);
+	c = gethostbyaddr((void*)&(ip->ip_src.s_addr),
+			sizeof(ip->ip_src.s_addr), AF_INET);
 	if (type == 1)
 	{
 		if (n == 0)
@@ -107,7 +108,8 @@ int		main(int c, char **v)
 	if (trace.ip)
 	{
 		printf("traceroute to %s (%s), 30 hops max,", v[1], trace.ip);
-		printf(" %ld byte packets\n", sizeof(struct ip) + sizeof(struct icmphdr));
+		printf(" %ld byte packets\n", sizeof(struct ip) +
+				sizeof(struct icmphdr));
 		ft_traceroute(&trace);
 		free(trace.buffer);
 	}
