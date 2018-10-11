@@ -2,6 +2,10 @@
 
 ft_traceroute is my own implementation of traceroute
 
+<p align="center">
+<img src="https://raw.github.com/pboyfunclub/ft_traceroute/master/preview.png">
+</p>
+
 ## Installation
 
 ### Requirements
