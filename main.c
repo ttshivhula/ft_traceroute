@@ -21,7 +21,7 @@ void	*create_msg(int hop, char *ip, char *buff)
 	ip_hdr->ip_hl = 5;
 	ip_hdr->ip_v = 4;
 	ip_hdr->ip_tos = 0;
-	ip_hdr->ip_len = 20 + 8;
+	ip_hdr->ip_len = sizeof(struct ip) + sizeof(struct icmphdr);
 	ip_hdr->ip_id = 10000;
 	ip_hdr->ip_off = 0;
 	ip_hdr->ip_ttl = hop;
